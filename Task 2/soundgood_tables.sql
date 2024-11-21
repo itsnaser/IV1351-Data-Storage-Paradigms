@@ -207,6 +207,8 @@ CREATE TABLE student_group (
  student_id INT NOT NULL,
  lesson_id INT NOT NULL
 );
+
+ALTER TABLE student_group ADD CONSTRAINT PK_student_group PRIMARY KEY (student_id,lesson_id);
 --#endregion
 
 --#region [student_ensemble]
@@ -214,54 +216,52 @@ CREATE TABLE student_ensemble (
  student_id INT NOT NULL,
  lesson_id INT NOT NULL
 );
+
+ALTER TABLE student_ensemble ADD CONSTRAINT PK_student_ensemble PRIMARY KEY (student_id,lesson_id);
 --#endregion
 
 
 --#region [CONSTRAINTS]
-ALTER TABLE student_group ADD CONSTRAINT PK_student_group PRIMARY KEY (student_id,lesson_id);
+ALTER TABLE person_address ADD CONSTRAINT FK_person_address_0 FOREIGN KEY (person_id) REFERENCES person (id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE person_address ADD CONSTRAINT FK_person_address_1 FOREIGN KEY (address_id) REFERENCES address (id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE student_ensemble ADD CONSTRAINT PK_student_ensemble PRIMARY KEY (student_id,lesson_id);
+ALTER TABLE phone_no ADD CONSTRAINT FK_phone_no_0 FOREIGN KEY (person_id) REFERENCES person (id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE person_address ADD CONSTRAINT FK_person_address_0 FOREIGN KEY (person_id) REFERENCES person (id);
-ALTER TABLE person_address ADD CONSTRAINT FK_person_address_1 FOREIGN KEY (address_id) REFERENCES address (id);
+ALTER TABLE student ADD CONSTRAINT FK_student_0 FOREIGN KEY (person_id) REFERENCES person (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE phone_no ADD CONSTRAINT FK_phone_no_0 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE contact_person ADD CONSTRAINT FK_contact_person_0 FOREIGN KEY (student_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE student ADD CONSTRAINT FK_student_0 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE email ADD CONSTRAINT FK_email_0 FOREIGN KEY (person_id) REFERENCES person (id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-ALTER TABLE contact_person ADD CONSTRAINT FK_contact_person_0 FOREIGN KEY (student_id) REFERENCES student (id);
+ALTER TABLE instructor ADD CONSTRAINT FK_instructor_0 FOREIGN KEY (person_id) REFERENCES person (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE email ADD CONSTRAINT FK_email_0 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE instructor_working_time ADD CONSTRAINT FK_instructor_working_time_0 FOREIGN KEY (instructor_id) REFERENCES instructor (id)  ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE instructor ADD CONSTRAINT FK_instructor_0 FOREIGN KEY (person_id) REFERENCES person (id);
+ALTER TABLE instrument ADD CONSTRAINT FK_instrument_0 FOREIGN KEY (type_id) REFERENCES instrument_type (id)  ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE instructor_working_time ADD CONSTRAINT FK_instructor_working_time_0 FOREIGN KEY (instructor_id) REFERENCES instructor (id);
+ALTER TABLE lesson ADD CONSTRAINT FK_lesson_0 FOREIGN KEY (instructor_id) REFERENCES instructor (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE lesson ADD CONSTRAINT FK_lesson_1 FOREIGN KEY (pricing_id) REFERENCES pricing_scheme (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE instrument ADD CONSTRAINT FK_instrument_0 FOREIGN KEY (type_id) REFERENCES instrument_type (id);
+ALTER TABLE rental_period ADD CONSTRAINT FK_rental_period_0 FOREIGN KEY (student_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE rental_period ADD CONSTRAINT FK_rental_period_1 FOREIGN KEY (instrument_id) REFERENCES instrument (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE lesson ADD CONSTRAINT FK_lesson_0 FOREIGN KEY (instructor_id) REFERENCES instructor (id);
-ALTER TABLE lesson ADD CONSTRAINT FK_lesson_1 FOREIGN KEY (pricing_id) REFERENCES pricing_scheme (id);
+ALTER TABLE sibling ADD CONSTRAINT FK_sibling_0 FOREIGN KEY (student_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE sibling ADD CONSTRAINT FK_sibling_1 FOREIGN KEY (sibling_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE rental_period ADD CONSTRAINT FK_rental_period_0 FOREIGN KEY (student_id) REFERENCES student (id);
-ALTER TABLE rental_period ADD CONSTRAINT FK_rental_period_1 FOREIGN KEY (instrument_id) REFERENCES instrument (id);
+ALTER TABLE ensemble_lesson ADD CONSTRAINT FK_ensemble_lesson_0 FOREIGN KEY (lesson_id) REFERENCES lesson (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE sibling ADD CONSTRAINT FK_sibling_0 FOREIGN KEY (student_id) REFERENCES student (id);
-ALTER TABLE sibling ADD CONSTRAINT FK_sibling_1 FOREIGN KEY (sibling_id) REFERENCES student (id);
+ALTER TABLE group_lesson ADD CONSTRAINT FK_group_lesson_0 FOREIGN KEY (lesson_id) REFERENCES lesson (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE group_lesson ADD CONSTRAINT FK_group_lesson_1 FOREIGN KEY (instrument_id) REFERENCES instrument_type (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE ensemble_lesson ADD CONSTRAINT FK_ensemble_lesson_0 FOREIGN KEY (lesson_id) REFERENCES lesson (id);
+ALTER TABLE individual_lesson ADD CONSTRAINT FK_individual_lesson_0 FOREIGN KEY (lesson_id) REFERENCES lesson (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE individual_lesson ADD CONSTRAINT FK_individual_lesson_1 FOREIGN KEY (student_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE individual_lesson ADD CONSTRAINT FK_individual_lesson_2 FOREIGN KEY (instrument_id) REFERENCES instrument_type (id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE group_lesson ADD CONSTRAINT FK_group_lesson_0 FOREIGN KEY (lesson_id) REFERENCES lesson (id);
-ALTER TABLE group_lesson ADD CONSTRAINT FK_group_lesson_1 FOREIGN KEY (instrument_id) REFERENCES instrument_type (id);
+ALTER TABLE student_group ADD CONSTRAINT FK_student_group_0 FOREIGN KEY (student_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE student_group ADD CONSTRAINT FK_student_group_1 FOREIGN KEY (lesson_id) REFERENCES group_lesson (lesson_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 
-ALTER TABLE individual_lesson ADD CONSTRAINT FK_individual_lesson_0 FOREIGN KEY (lesson_id) REFERENCES lesson (id);
-ALTER TABLE individual_lesson ADD CONSTRAINT FK_individual_lesson_1 FOREIGN KEY (student_id) REFERENCES student (id);
-ALTER TABLE individual_lesson ADD CONSTRAINT FK_individual_lesson_2 FOREIGN KEY (instrument_id) REFERENCES instrument_type (id);
-
-ALTER TABLE student_group ADD CONSTRAINT FK_student_group_0 FOREIGN KEY (student_id) REFERENCES student (id);
-ALTER TABLE student_group ADD CONSTRAINT FK_student_group_1 FOREIGN KEY (lesson_id) REFERENCES group_lesson (lesson_id);
-
-ALTER TABLE student_ensemble ADD CONSTRAINT FK_student_ensemble_0 FOREIGN KEY (student_id) REFERENCES student (id);
-ALTER TABLE student_ensemble ADD CONSTRAINT FK_student_ensemble_2 FOREIGN KEY (lesson_id) REFERENCES ensemble_lesson (lesson_id);
+ALTER TABLE student_ensemble ADD CONSTRAINT FK_student_ensemble_0 FOREIGN KEY (student_id) REFERENCES student (id) ON UPDATE CASCADE ON DELETE RESTRICT;
+ALTER TABLE student_ensemble ADD CONSTRAINT FK_student_ensemble_2 FOREIGN KEY (lesson_id) REFERENCES ensemble_lesson (lesson_id) ON UPDATE CASCADE ON DELETE RESTRICT;
 --#endregion
 
 --#region [TRIGGERFUNCTIONS]
