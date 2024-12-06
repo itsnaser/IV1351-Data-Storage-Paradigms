@@ -1,0 +1,70 @@
+﻿@page "/profile/{student_id:int}"
+@rendermode InteractiveServer
+
+@if (showAlert){
+	<div class="alert alert-danger alert-dismissible fade show" role="alert">
+		Failed to terminate! Please try again.
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="() => showAlert = false"></button>
+	</div>
+}
+<PageTitle>Students</PageTitle>
+
+<h3>@student.person.full_name</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Type</th>
+			<th scope="col">Brand</th>
+			<th scope="col">Fee</th>
+			<th scope="col">From</th>
+			<th scope="col">To</th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var rental in activeRentals)
+		{
+			<tr>
+				<th scope="row">@rental.id</th>
+				<td>@rental.name</td>
+				<td>@rental.brand</td>
+				<td>@rental.monthly_fee</td>
+				<td>@rental.rented_from</td>
+				<td>@rental.rented_until</td>
+				<td><button class="btn btn-sm btn-danger" @onclick="@(e=>TerminateRental(rental.id))">Terminate</button></td>
+			</tr>
+		}
+	</tbody>
+
+</table>
+
+
+
+@code {
+	[Parameter]
+	public int student_id { get; set; }
+
+	bool showAlert = false;
+	Student student;
+	List<Rental> activeRentals =>  _DAL.GetStudentActiveRentals(student_id);
+
+	protected override async Task OnInitializedAsync()
+	{
+		student = _DAL.GetStudent(student_id);
+		// activeRentals = _DAL.GetStudentActiveRentals(student_id);
+	}
+	private void TerminateRental(int rentalId)
+	{
+		if (_DAL.TerminateRental(rentalId))
+		{
+			StateHasChanged();
+		}
+		else{
+			showAlert = true;
+
+		}
+
+	}
+
+}
