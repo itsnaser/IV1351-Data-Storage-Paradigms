@@ -50,6 +50,13 @@ namespace Soundgood.Core.Services
             var rentals = connection.Query<Rental>(SqlQueries.GetStudentActiveRentals(student_id));
             return rentals.ToList();
         }
+        public List<Rental> GetStudentHistoryRentals(int student_id)
+        {
+            using var dataSource = NpgsqlDataSource.Create(_connectionString);
+            using var connection = dataSource.OpenConnection();
+            var rentals = connection.Query<Rental>(SqlQueries.GetStudentHistoryRentals(student_id));
+            return rentals.ToList();
+        }
         public List<Instrument> GetInstruments()
         {
             using var dataSource = NpgsqlDataSource.Create(_connectionString);
@@ -62,6 +69,11 @@ namespace Soundgood.Core.Services
             using var dataSource = NpgsqlDataSource.Create(_connectionString);
             using var connection = dataSource.OpenConnection();
             var instruments = connection.Query<Instrument>(SqlQueries.GetAvailableInstruments);
+            var instrumentstype = connection.GetAll<InstrumentType>();
+            foreach (var instrument in instruments)
+            {
+                instrument.type = instrumentstype.FirstOrDefault(p => p.id == instrument.type_id);
+            }
             return instruments.ToList();
         }
 
@@ -83,6 +95,32 @@ namespace Soundgood.Core.Services
                     transaction.Rollback();
                     return false;
                 }
+                return true;
+            }
+        }
+
+        public bool CreateNewRental(Rental rental)
+        {
+            using var dataSource = NpgsqlDataSource.Create(_connectionString);
+            using var connection = dataSource.OpenConnection();
+
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    var affected = connection.Execute(SqlQueries.CreateNewRental(rental), transaction: transaction);
+                    if (affected > 0)
+                    {
+                        transaction.Commit();
+                    }
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    return false;
+                    throw;
+                }
+
                 return true;
             }
         }

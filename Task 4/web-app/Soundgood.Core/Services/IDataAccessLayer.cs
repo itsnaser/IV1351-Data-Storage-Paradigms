@@ -12,9 +12,11 @@ namespace Soundgood.Core.Services
         List<Student> GetStudents();
         Student GetStudent(int student_id);
         List<Rental> GetStudentActiveRentals(int student_id);
+        List<Rental> GetStudentHistoryRentals(int student_id);
         List<Instrument> GetInstruments();
         List<Instrument> GetAvailableInstruments();
         bool TerminateRental(int rental_id);
+        bool CreateNewRental(Rental rental);
 
 
     }

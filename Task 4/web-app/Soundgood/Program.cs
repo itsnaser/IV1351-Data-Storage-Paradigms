@@ -1,3 +1,4 @@
+using Radzen;
 using Soundgood.Components;
 using Soundgood.Core.Services;
 namespace Soundgood
@@ -11,6 +12,7 @@ namespace Soundgood
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddRadzenComponents();
 
             ConfigureServices(builder.Services);
             var app = builder.Build();

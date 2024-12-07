@@ -1,45 +1,132 @@
 ﻿@page "/profile/{student_id:int}"
 @rendermode InteractiveServer
 
-@if (showAlert){
+<PageTitle>Profile</PageTitle>
+
+@if (showAlert)
+{
 	<div class="alert alert-danger alert-dismissible fade show" role="alert">
-		Failed to terminate! Please try again.
+		Something went wrong! Please try again.
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="() => showAlert = false"></button>
 	</div>
 }
-<PageTitle>Students</PageTitle>
-
 <h3>@student.person.full_name</h3>
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">#</th>
-			<th scope="col">Type</th>
-			<th scope="col">Brand</th>
-			<th scope="col">Fee</th>
-			<th scope="col">From</th>
-			<th scope="col">To</th>
-			<th scope="col"></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var rental in activeRentals)
-		{
-			<tr>
-				<th scope="row">@rental.id</th>
-				<td>@rental.name</td>
-				<td>@rental.brand</td>
-				<td>@rental.monthly_fee</td>
-				<td>@rental.rented_from</td>
-				<td>@rental.rented_until</td>
-				<td><button class="btn btn-sm btn-danger" @onclick="@(e=>TerminateRental(rental.id))">Terminate</button></td>
-			</tr>
-		}
-	</tbody>
 
-</table>
+<div class="d-flex flex-row">
+	<div class="row py-4">
+		<div class="col-7">
+
+			<div class="row">
+				<h5>Active rentals</h5>
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col" width="5%">#</th>
+							<th scope="col" width="13%">Type</th>
+							<th scope="col" width="20%">Brand</th>
+							<th scope="col" width="14%">Monthly Fee</th>
+							<th scope="col" width="16%">Rented From</th>
+							<th scope="col" width="16%">Rented Until</th>
+							<th scope="col" width="16%"></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var rental in activeRentals)
+						{
+							<tr>
+								<th scope="row">@rental.id</th>
+								<td>@rental.name</td>
+								<td>@rental.brand</td>
+								<td>@rental.monthly_fee</td>
+								<td>@rental.rented_from.ToString("yyyy-MM-dd")</td>
+								<td>@rental.rented_until.ToString("yyyy-MM-dd")</td>
+								<td><button class="btn btn-sm btn-danger" @onclick="@(()=>TerminateRental(rental.id))">Terminate</button></td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			<hr />
+			<div class="row">
+				<h5>Rental history</h5>
+				<div style="height: auto;max-height: 50vh;overflow-x: hidden;">
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col" >#</th>
+								<th scope="col" >Type</th>
+								<th scope="col" >Brand</th>
+								<th scope="col" >Fee/30days</th>
+								<th scope="col" >Rented From</th>
+								<th scope="col" >Terminated at</th>
+								<th scope="col" >Rented Until</th>
+								<th scope="col" >Total</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var rental in historyRentals)
+							{
+								<tr>
+									<th scope="row">@rental.id</th>
+									<td>@rental.name</td>
+									<td>@rental.brand</td>
+									<td>@rental.monthly_fee</td>
+									<td>@rental.rented_from.ToString("yyyy-MM-dd")</td>
+									<td>@rental.termination</td>
+									<td>@rental.rented_until.ToString("yyyy-MM-dd")</td>
+									<td>@rental.total</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 
 
+		<div class="col-5">
+			<h5>Rent an Instrument</h5>
+
+			@if (activeRentals.Count < 2)
+			{
+				@if (instrumentToRent != null)
+				{
+					<div class="d-flex flex-row align-items-baseline">
+						<p class="pe-4">Selected: <strong>@instrumentToRent[0].type.name @instrumentToRent[0].brand :- @instrumentToRent[0].monthly_fee kr/month</strong></p>
+						<button class="btn btn-success badge" @onclick="@(() => RentInstrument())">Rent</button>
+					</div>
+
+				}
+				else
+				{
+					<p>Select an instrument:</p>
+				}
+				<hr />
+
+				<RadzenDataGrid Density="Density.Compact" ShowPagingSummary="true" AllowGrouping="true" AllowFiltering="true" FilterMode="FilterMode.Simple"
+								FilterOperator="FilterOperator.Contains" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@instrumentToRent
+								PageSize="15" PagerHorizontalAlign="HorizontalAlign.Center" AllowSorting="true" AllowPaging="true" Data="@availableInstruments">
+					<Columns>
+						<RadzenDataGridColumn Property="type.name" Title="Type" Width="100px" />
+						<RadzenDataGridColumn Property="brand" Title="Brand" Width="100px" />
+						<RadzenDataGridColumn Property="monthly_fee" Title="Fee" Width="100px" />
+					</Columns>
+				</RadzenDataGrid>
+
+			}
+			else
+			{
+				<div class="d-flex flex-row align-items-baseline">
+					<p class="pe-4">You have reached maximum amount rented instruments.</p>
+				</div>
+			}
+		</div>
+
+	</div>
+
+
+</div>
 
 @code {
 	[Parameter]
@@ -47,12 +134,22 @@
 
 	bool showAlert = false;
 	Student student;
-	List<Rental> activeRentals =>  _DAL.GetStudentActiveRentals(student_id);
+	List<Rental> activeRentals => _DAL.GetStudentActiveRentals(student_id);
+	List<Rental> historyRentals => _DAL.GetStudentHistoryRentals(student_id);
+	List<Instrument> availableInstruments => _DAL.GetAvailableInstruments();
+	IList<Instrument> instrumentToRent;
 
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+	}
 	protected override async Task OnInitializedAsync()
 	{
 		student = _DAL.GetStudent(student_id);
-		// activeRentals = _DAL.GetStudentActiveRentals(student_id);
+	}
+	private void CreateNewRental(Instrument instrument)
+	{
+
 	}
 	private void TerminateRental(int rentalId)
 	{
@@ -60,11 +157,29 @@
 		{
 			StateHasChanged();
 		}
-		else{
+		else
+		{
 			showAlert = true;
 
 		}
 
 	}
+
+	private void RentInstrument()
+	{
+		Rental rental = new Rental(student.id, instrumentToRent[0].id);
+		if (_DAL.CreateNewRental(rental))
+		{
+			instrumentToRent = null;
+			StateHasChanged();
+		}
+		else
+		{
+			showAlert = true;
+
+		}
+	}
+
+
 
 }
