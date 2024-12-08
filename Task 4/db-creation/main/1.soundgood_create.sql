@@ -311,7 +311,7 @@ BEGIN
     IF (SELECT COUNT(*)
         FROM soundgood.rental_period
         WHERE student_id = NEW.student_id
-          AND termination_date IS NULL) >= 2 THEN
+        AND termination_date IS NULL) >= 2 THEN
         RAISE EXCEPTION 'Student can only rent up to two instruments at the same time';
     END IF;
 

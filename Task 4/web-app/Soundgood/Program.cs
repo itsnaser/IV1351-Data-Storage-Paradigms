@@ -12,7 +12,10 @@ namespace Soundgood
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            //region Changes 
             builder.Services.AddRadzenComponents();
+            //endregion
 
             ConfigureServices(builder.Services);
             var app = builder.Build();
@@ -31,9 +34,12 @@ namespace Soundgood
 
             app.Run();
         }
+        // region Changes  
         public static void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IDataAccessLayer, DataAccessLayer>();
         }
+        //endregion
+
     }
 }
