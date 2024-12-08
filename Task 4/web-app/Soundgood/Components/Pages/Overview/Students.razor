@@ -8,7 +8,7 @@
 @foreach (var student in students)
 {
 	<div>
-		<a class="link-body-emphasis" href="profile/@student.id" target="_blank">[@student.id] @student.person.full_name</a>
+		<a class="link-body-emphasis" href="student/@student.id" target="_blank">[@student.id] @student.person.full_name</a>
 	</div>
 }
 @code {

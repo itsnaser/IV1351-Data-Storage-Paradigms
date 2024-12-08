@@ -1,4 +1,4 @@
-﻿@page "/profile/{student_id:int}"
+﻿@page "/student/{student_id:int}"
 @rendermode InteractiveServer
 
 <PageTitle>Profile</PageTitle>
@@ -37,7 +37,7 @@
 								<th scope="row">@rental.id</th>
 								<td>@rental.name</td>
 								<td>@rental.brand</td>
-								<td>@rental.monthly_fee</td>
+								<td>@rental.monthly_fee kr</td>
 								<td>@rental.rented_from.ToString("yyyy-MM-dd")</td>
 								<td>@rental.rented_until.ToString("yyyy-MM-dd")</td>
 								<td><button class="btn btn-sm btn-danger" @onclick="@(()=>TerminateRental(rental.id))">Terminate</button></td>
@@ -57,7 +57,7 @@
 								<th scope="col" >#</th>
 								<th scope="col" >Type</th>
 								<th scope="col" >Brand</th>
-								<th scope="col" >Fee/30days</th>
+								<th scope="col">Monthly Fee</th>
 								<th scope="col" >Rented From</th>
 								<th scope="col" >Terminated at</th>
 								<th scope="col" >Rented Until</th>
@@ -71,7 +71,7 @@
 									<th scope="row">@rental.id</th>
 									<td>@rental.name</td>
 									<td>@rental.brand</td>
-									<td>@rental.monthly_fee</td>
+									<td>@rental.monthly_fee kr</td>
 									<td>@rental.rented_from.ToString("yyyy-MM-dd")</td>
 									<td>@rental.termination</td>
 									<td>@rental.rented_until.ToString("yyyy-MM-dd")</td>
@@ -93,7 +93,7 @@
 				@if (instrumentToRent != null)
 				{
 					<div class="d-flex flex-row align-items-baseline">
-						<p class="pe-4">Selected: <strong>@instrumentToRent[0].type.name @instrumentToRent[0].brand :- @instrumentToRent[0].monthly_fee kr/month</strong></p>
+						<p class="pe-4">@instrumentToRent[0].type.name @instrumentToRent[0].brand <strong>:- @instrumentToRent[0].monthly_fee kr/30 days</strong></p>
 						<button class="btn btn-success badge" @onclick="@(() => RentInstrument())">Rent</button>
 					</div>
 
@@ -108,9 +108,9 @@
 								FilterOperator="FilterOperator.Contains" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@instrumentToRent
 								PageSize="15" PagerHorizontalAlign="HorizontalAlign.Center" AllowSorting="true" AllowPaging="true" Data="@availableInstruments">
 					<Columns>
-						<RadzenDataGridColumn Property="type.name" Title="Type" Width="100px" />
-						<RadzenDataGridColumn Property="brand" Title="Brand" Width="100px" />
-						<RadzenDataGridColumn Property="monthly_fee" Title="Fee" Width="100px" />
+						<RadzenDataGridColumn Property="type.name" Title="Type" Width="80px" />
+						<RadzenDataGridColumn Property="brand" Title="Brand" Width="140px" />
+						<RadzenDataGridColumn Property="monthly_fee" Title="Fee" Width="60px" />
 					</Columns>
 				</RadzenDataGrid>
 

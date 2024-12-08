@@ -17,7 +17,7 @@ namespace Soundgood.Core.Models
         public double monthly_fee { get; set; }
 
         [Computed]
-        public double total { get { return (termination_date - rented_from).TotalDays / 30 * monthly_fee; } }
+        public string total { get { return Math.Round((termination_date - rented_from).TotalDays / 30 * monthly_fee, 2).ToString() + "kr"; } }
 
         public Rental() { }
         public Rental(int student_id, int instrument_id)
