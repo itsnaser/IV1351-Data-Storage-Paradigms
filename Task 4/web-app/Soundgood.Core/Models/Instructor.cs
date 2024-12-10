@@ -1,17 +1,10 @@
-﻿using Dapper.Contrib.Extensions;
-
-namespace Soundgood.Core.Models
+﻿namespace Soundgood.Core.Models
 {
-    [Table("soundgood.instructor")]
-
     public class Instructor : IEquatable<Instructor>
     {
-        [Key]
         public int id { get; set; }
         public int person_id { get; set; }
         public bool can_teach_ensemble { get; set; }
-
-        [Computed]
         public Person person { get; set; }
 
         public Instructor()

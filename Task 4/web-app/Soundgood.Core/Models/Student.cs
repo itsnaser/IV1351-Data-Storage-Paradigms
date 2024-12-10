@@ -1,20 +1,12 @@
-﻿using Dapper.Contrib.Extensions;
-
-namespace Soundgood.Core.Models
+﻿namespace Soundgood.Core.Models
 {
-    [Table("soundgood.student")]
     public class Student : IEquatable<Student>
     {
-        [Key]
         public int id { get; set; }
         public int person_id { get; set; }
-
-        [Computed]
         public Person person { get; set; }
 
-        public Student()
-        {
-        }
+        public Student() { }
         public Student(int id, int person_id)
         {
             this.id = id;

@@ -23,11 +23,11 @@
 						<tr>
 							<th scope="col" width="5%">#</th>
 							<th scope="col" width="13%">Type</th>
-							<th scope="col" width="20%">Brand</th>
-							<th scope="col" width="14%">Monthly Fee</th>
-							<th scope="col" width="16%">Rented From</th>
-							<th scope="col" width="16%">Rented Until</th>
-							<th scope="col" width="16%"></th>
+							<th scope="col" width="25%">Brand</th>
+							<th scope="col" width="13%">Monthly Fee</th>
+							<th scope="col" width="14%">Rented From</th>
+							<th scope="col" width="14%">Rented Until</th>
+							<th scope="col" width="10%"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -57,7 +57,7 @@
 								<th scope="col" >#</th>
 								<th scope="col" >Type</th>
 								<th scope="col" >Brand</th>
-								<th scope="col">Monthly Fee</th>
+								<th scope="col" >Monthly Fee</th>
 								<th scope="col" >Rented From</th>
 								<th scope="col" >Terminated at</th>
 								<th scope="col" >Rented Until</th>
@@ -134,9 +134,9 @@
 
 	bool showAlert = false;
 	Student student;
-	List<Rental> activeRentals => _DAL.GetStudentActiveRentals(student_id);
-	List<Rental> historyRentals => _DAL.GetStudentHistoryRentals(student_id);
-	List<Instrument> availableInstruments => _DAL.GetAvailableInstruments();
+	List<Rental> activeRentals => _DAL.ReadStudentActiveRentals(student_id);
+	List<Rental> historyRentals => _DAL.ReadStudentHistoryRentals(student_id);
+	List<Instrument> availableInstruments => _DAL.ReadAllAvailableInstruments();
 	IList<Instrument> instrumentToRent;
 
 	protected override void OnParametersSet()
@@ -145,24 +145,19 @@
 	}
 	protected override async Task OnInitializedAsync()
 	{
-		student = _DAL.GetStudent(student_id);
+		student = _DAL.ReadStudent(student_id);
 	}
-	private void CreateNewRental(Instrument instrument)
-	{
 
-	}
 	private void TerminateRental(int rentalId)
 	{
-		if (_DAL.TerminateRental(rentalId))
+		if (_DAL.UpdateTerminatedRental(rentalId))
 		{
 			StateHasChanged();
 		}
 		else
 		{
 			showAlert = true;
-
 		}
-
 	}
 
 	private void RentInstrument()
@@ -176,10 +171,7 @@
 		else
 		{
 			showAlert = true;
-
 		}
 	}
-
-
 
 }

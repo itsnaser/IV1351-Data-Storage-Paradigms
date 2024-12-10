@@ -25,7 +25,7 @@
 	protected override void OnParametersSet()
 	{
 		base.OnParametersSet();
-		availableInstruments = _DAL.GetAvailableInstruments();
+		availableInstruments = _DAL.ReadAllAvailableInstruments();
 	}
 	protected override async Task OnInitializedAsync()
 	{
