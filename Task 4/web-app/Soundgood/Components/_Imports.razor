@@ -1,0 +1,20 @@
+﻿@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using Soundgood
+@using Soundgood.Components
+
+@* region Changes  *@
+@using Npgsql
+@using Soundgood.Core.Services
+@using Soundgood.Core.Models
+@inject IDataAccessLayer _DAL
+@inject NavigationManager NavigationManager
+@using Radzen
+@using Radzen.Blazor
+@* endregion *@

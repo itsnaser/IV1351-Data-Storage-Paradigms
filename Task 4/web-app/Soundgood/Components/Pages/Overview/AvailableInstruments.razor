@@ -1,0 +1,33 @@
+﻿@page "/instruments/available"
+@rendermode InteractiveServer
+<PageTitle>Available Instruments</PageTitle>
+
+<h3>Available Instruments</h3>
+
+<div class="d-flex flex-row">
+	<div class="row">
+		<div class="col-8">
+			<RadzenDataGrid Density="Density.Compact" ShowPagingSummary="true" AllowGrouping="true" AllowFiltering="true" FilterMode="FilterMode.Simple"
+							AllowSorting="true" PageSize="20" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true" 
+			AllowPaging="true" Data="@availableInstruments">
+				<Columns>
+					<RadzenDataGridColumn Property="id" Filterable="false" Title="ID" Frozen="true" Width="30px" TextAlign="TextAlign.Center" />
+					<RadzenDataGridColumn Property="type.name" Title="Type" Width="60px" />
+					<RadzenDataGridColumn Property="brand" Title="Brand" Width="100px" />
+					<RadzenDataGridColumn Property="monthly_fee" Title="Fee" Width="40px" />
+				</Columns>
+			</RadzenDataGrid>
+		</div>
+	</div>
+</div>
+@code {
+	List<Instrument> availableInstruments;
+	protected override void OnParametersSet()
+	{
+		base.OnParametersSet();
+		availableInstruments = _DAL.ReadAllAvailableInstruments();
+	}
+	protected override async Task OnInitializedAsync()
+	{
+	}
+}

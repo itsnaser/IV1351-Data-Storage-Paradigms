@@ -1,0 +1,22 @@
+﻿@page "/students"
+@rendermode InteractiveServer
+
+<PageTitle>Students</PageTitle>
+
+<h3>Students</h3>
+
+@foreach (var student in students)
+{
+	<div>
+		<a class="link-body-emphasis" href="student/@student.id" target="_blank">[@student.id] @student.person.full_name</a>
+	</div>
+}
+@code {
+	List<Student> students;
+
+	protected override async Task OnInitializedAsync()
+	{
+		students =  _DAL.ReadAllStudents();
+	}
+	
+}
