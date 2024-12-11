@@ -16,7 +16,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		students =  _DAL.ReadAllStudents();
+		students = _SL.GetAllStudents();
 	}
 	
 }

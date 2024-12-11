@@ -18,16 +18,16 @@
 
 			<div class="row">
 				<h5>Active rentals</h5>
-				<table class="table">
+				<table class="table" style="font-size:14px;">
 					<thead>
 						<tr>
-							<th scope="col" width="5%">#</th>
-							<th scope="col" width="13%">Type</th>
+							<th scope="col" >#</th>
+							<th scope="col" >Type</th>
 							<th scope="col" width="25%">Brand</th>
-							<th scope="col" width="13%">Monthly Fee</th>
-							<th scope="col" width="14%">Rented From</th>
-							<th scope="col" width="14%">Rented Until</th>
-							<th scope="col" width="10%"></th>
+							<th scope="col" >Monthly Fee</th>
+							<th scope="col" >Rented From</th>
+							<th scope="col" >Rented Until</th>
+							<th scope="col" ></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -51,12 +51,12 @@
 				<h5>Rental history</h5>
 				<div style="height: auto;max-height: 50vh;overflow-x: hidden;">
 
-					<table class="table">
+					<table class="table" style="font-size:14px;">
 						<thead>
 							<tr>
 								<th scope="col" >#</th>
 								<th scope="col" >Type</th>
-								<th scope="col" >Brand</th>
+								<th scope="col" width="25%">Brand</th>
 								<th scope="col" >Monthly Fee</th>
 								<th scope="col" >Rented From</th>
 								<th scope="col" >Terminated at</th>
@@ -134,9 +134,9 @@
 
 	bool showAlert = false;
 	Student student;
-	List<Rental> activeRentals => _DAL.ReadStudentActiveRentals(student_id);
-	List<Rental> historyRentals => _DAL.ReadStudentHistoryRentals(student_id);
-	List<Instrument> availableInstruments => _DAL.ReadAllAvailableInstruments();
+	List<Rental> activeRentals => _SL.GetStudentActiveRentals(student_id);
+	List<Rental> historyRentals => _SL.GetStudentHistoryRentals(student_id);
+	List<Instrument> availableInstruments => _SL.GetAllAvailableInstruments();
 	IList<Instrument> instrumentToRent;
 
 	protected override void OnParametersSet()
@@ -145,12 +145,12 @@
 	}
 	protected override async Task OnInitializedAsync()
 	{
-		student = _DAL.ReadStudent(student_id);
+		student = _SL.GetStudent(student_id);
 	}
 
 	private void TerminateRental(int rentalId)
 	{
-		if (_DAL.UpdateTerminatedRental(rentalId))
+		if (_SL.ModifyTerminatedRental(rentalId))
 		{
 			StateHasChanged();
 		}
@@ -162,8 +162,7 @@
 
 	private void RentInstrument()
 	{
-		Rental rental = new Rental(student.id, instrumentToRent[0].id);
-		if (_DAL.CreateNewRental(rental))
+		if (_SL.AddNewRental(student.id, instrumentToRent[0].id))
 		{
 			instrumentToRent = null;
 			StateHasChanged();

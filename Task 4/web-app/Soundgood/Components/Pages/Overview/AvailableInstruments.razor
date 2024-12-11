@@ -8,7 +8,7 @@
 	<div class="row">
 		<div class="col-8">
 			<RadzenDataGrid Density="Density.Compact" ShowPagingSummary="true" AllowGrouping="true" AllowFiltering="true" FilterMode="FilterMode.Simple"
-							AllowSorting="true" PageSize="20" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true" 
+			AllowSorting="true" PageSize="20" PagerHorizontalAlign="HorizontalAlign.Center" PagerAlwaysVisible="true" 
 			AllowPaging="true" Data="@availableInstruments">
 				<Columns>
 					<RadzenDataGridColumn Property="id" Filterable="false" Title="ID" Frozen="true" Width="30px" TextAlign="TextAlign.Center" />
@@ -22,12 +22,10 @@
 </div>
 @code {
 	List<Instrument> availableInstruments;
+
 	protected override void OnParametersSet()
 	{
 		base.OnParametersSet();
-		availableInstruments = _DAL.ReadAllAvailableInstruments();
-	}
-	protected override async Task OnInitializedAsync()
-	{
+		availableInstruments = _SL.GetAllAvailableInstruments();
 	}
 }

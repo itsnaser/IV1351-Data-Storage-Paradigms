@@ -37,7 +37,8 @@ namespace Soundgood
         // region Changes  
         public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IDataAccessLayer, DataAccessLayer>();
+            services.AddScoped<IDataAccessLayer, DataAccessLayer>(); 
+            services.AddScoped<ISoundgoodLogic, SoundgoodLogic>(); 
         }
         //endregion
 
