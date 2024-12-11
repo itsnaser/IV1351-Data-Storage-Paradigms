@@ -147,7 +147,7 @@ namespace Soundgood.Core.Services
                 transaction.Commit();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 transaction.Rollback();
                 return false;
@@ -170,10 +170,11 @@ namespace Soundgood.Core.Services
                 transaction.Commit();
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 transaction.Rollback();
                 return false;
+                throw;
             }
         }
     }

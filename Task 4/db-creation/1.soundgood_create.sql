@@ -304,7 +304,7 @@ AS $BODY$
 BEGIN
     -- Check if the rental period is longer than 12 months
     IF NEW.rented_until > NEW.rented_from + INTERVAL '12 months' THEN
-        RAISE EXCEPTION 'Rental period cannot exceed 12 months';
+        RAISE EXCEPTION 'Rental period cannot exceed 12 months.';
     END IF;
 
     -- Check if the student is trying to rent more than 2 instruments at the same time
@@ -312,7 +312,14 @@ BEGIN
         FROM soundgood.rental_period
         WHERE student_id = NEW.student_id
         AND termination_date IS NULL) >= 2 THEN
-        RAISE EXCEPTION 'Student can only rent up to two instruments at the same time';
+        RAISE EXCEPTION 'Student can only rent up to two instruments at the same time.';
+    END IF;
+
+    IF (SELECT COUNT(*)
+        FROM soundgood.rental_period
+        WHERE instrument_id = NEW.instrument_id
+        AND termination_date IS NULL) = 1 THEN
+        RAISE EXCEPTION 'Instrument is already rented.';
     END IF;
 
     RETURN NEW;
