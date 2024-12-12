@@ -12,11 +12,6 @@
 	</div>
 }
 @code {
-	List<Student> students;
+	List<Student> students => _SL.GetAllStudents();
 
-	protected override async Task OnInitializedAsync()
-	{
-		students = _SL.GetAllStudents();
-	}
-	
 }

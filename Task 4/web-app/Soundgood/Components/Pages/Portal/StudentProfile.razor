@@ -133,20 +133,12 @@
 	public int student_id { get; set; }
 
 	bool showAlert = false;
-	Student student;
+	Student student => _SL.GetStudent(student_id);
 	List<Rental> activeRentals => _SL.GetStudentActiveRentals(student_id);
 	List<Rental> historyRentals => _SL.GetStudentHistoryRentals(student_id);
 	List<Instrument> availableInstruments => _SL.GetAllAvailableInstruments();
 	IList<Instrument> instrumentToRent;
 
-	protected override void OnParametersSet()
-	{
-		base.OnParametersSet();
-	}
-	protected override async Task OnInitializedAsync()
-	{
-		student = _SL.GetStudent(student_id);
-	}
 
 	private void TerminateRental(int rentalId)
 	{
